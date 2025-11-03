@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -21,6 +21,7 @@
 package me.heshamshy.ktane.expertcompanion.command.commands;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.heshamshy.ktane.expertcompanion.cli.TerminalManager;
 import me.heshamshy.ktane.expertcompanion.command.Command;
 import me.heshamshy.ktane.expertcompanion.command.CommandManager;
@@ -33,13 +34,11 @@ import java.util.List;
 
 import static org.jline.builtins.Completers.TreeCompleter.node;
 
+@RequiredArgsConstructor
 public class HelpCommand implements Command {
 
+    private final TerminalManager terminalManager;
     private final CommandManager commandManager;
-
-    public HelpCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
-    }
 
     @Override
     @Nonnull
@@ -82,7 +81,7 @@ public class HelpCommand implements Command {
 
         // In case the command had no args, this runs and prints a list of available commands in the app
         // with the aliases and the description of the command for each.
-        if (args.size() == 0) {
+        if (args.isEmpty()) {
             final List<Command> commands = commandManager.getCommands();
 
             for (Command command : commands) {
@@ -90,7 +89,7 @@ public class HelpCommand implements Command {
                 stringBuilder.append(printableCommandInfo(command));
             }
 
-            TerminalManager.outputTextLn(stringBuilder.toString());
+            terminalManager.outputTextLn(stringBuilder.toString());
             return;
         }
 
@@ -110,7 +109,7 @@ public class HelpCommand implements Command {
             stringBuilder.append("\n").append("    Usage: `").append(command.usage()).append("`");
         }
 
-        TerminalManager.outputTextLn(stringBuilder.toString());
+        terminalManager.outputTextLn(stringBuilder.toString());
     }
 
     private String printableCommandInfo(@NonNull Command command) {
@@ -150,10 +149,10 @@ public class HelpCommand implements Command {
     }
 
     private Node generateNodeFromLinkedList(LinkedList<String> list, int currentIndex) {
-        if (list.size()-1 == currentIndex) {
+        if (list.size() - 1 == currentIndex) {
             return node(list.get(currentIndex));
         }
 
-        return node(list.get(currentIndex), generateNodeFromLinkedList(list, currentIndex+1));
+        return node(list.get(currentIndex), generateNodeFromLinkedList(list, currentIndex + 1));
     }
 }

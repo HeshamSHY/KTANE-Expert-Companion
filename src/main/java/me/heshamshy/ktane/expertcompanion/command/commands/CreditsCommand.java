@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -28,6 +28,12 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class CreditsCommand implements Command {
+    private final TerminalManager terminalManager;
+
+    public CreditsCommand(TerminalManager terminalManager) {
+        this.terminalManager = terminalManager;
+    }
+
     @Override
     @Nonnull
     public String name() {
@@ -60,7 +66,7 @@ public class CreditsCommand implements Command {
 
     @Override
     public void handle(List<String> args) {
-        TerminalManager.outputTextLn(credits);
+        terminalManager.outputTextLn(credits);
     }
 
     private final String credits =

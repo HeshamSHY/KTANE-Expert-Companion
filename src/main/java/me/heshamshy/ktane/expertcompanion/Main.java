@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -22,7 +22,6 @@ package me.heshamshy.ktane.expertcompanion;
 
 import me.heshamshy.ktane.expertcompanion.cli.TerminalManager;
 import me.heshamshy.ktane.expertcompanion.command.CommandManager;
-import me.heshamshy.ktane.expertcompanion.utils.ConsoleUtils;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -47,10 +46,10 @@ public class Main {
         final String programDescription = properties.getProperty("program.description");
         final String programVersion = properties.getProperty("program.version");
 
-        TerminalManager.init();
+        TerminalManager terminalManager = new TerminalManager();
 
-        ConsoleUtils.clearConsole();
-        ConsoleUtils.printHeader(
+        terminalManager.clearConsole();
+        terminalManager.printHeader(
                 programName,
                 programAuthor,
                 2023,
@@ -59,10 +58,10 @@ public class Main {
 
         );
 
-        final CommandManager commandManager = new CommandManager();
+        final CommandManager commandManager = new CommandManager(terminalManager, properties);
 
         LineReader lineReader = LineReaderBuilder.builder()
-                .terminal(TerminalManager.getTerminal())
+                .terminal(terminalManager.getTerminal())
                 .appName("KTANE Expert Companion")
                 .completer(commandManager.getCompleter())
                 .highlighter(new DefaultHighlighter())
@@ -70,12 +69,12 @@ public class Main {
                 .build();
 
         while (true) {
-            String line = null;
+            String line;
 
             try {
                 line = lineReader.readLine("KCE>> ");
             } catch (UserInterruptException e) {
-                TerminalManager.close();
+                terminalManager.close();
                 return;
             } catch (EndOfFileException e) {
                 return;
@@ -85,14 +84,14 @@ public class Main {
             if (line.isBlank()) continue;
 
             if (line.strip().equalsIgnoreCase("exit")) {
-                TerminalManager.close();
+                terminalManager.close();
                 return;
             }
 
             try {
                 commandManager.handle(line);
             } catch (IllegalArgumentException e) {
-                TerminalManager.outputTextLn(e.getMessage());
+                terminalManager.outputTextLn(e.getMessage());
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -22,12 +22,12 @@ package me.heshamshy.ktane.expertcompanion.command;
 
 import lombok.Getter;
 import lombok.NonNull;
+import me.heshamshy.ktane.expertcompanion.cli.TerminalManager;
 import me.heshamshy.ktane.expertcompanion.command.commands.*;
 import org.jline.builtins.Completers.TreeCompleter;
 import org.jline.builtins.Completers.TreeCompleter.Node;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,22 +42,17 @@ public class CommandManager {
     @Getter
     private final TreeCompleter completer;
 
-    public CommandManager() {
-        final Properties properties = new Properties();
-        try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("application.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        final String programName = properties.getProperty("program.name");
-        final String programVersion = properties.getProperty("program.version");
-        final String programRepoLink = properties.getProperty("program.repository.link");
+    public CommandManager(TerminalManager terminalManager, Properties programProperties) {
 
-        addCommand(new HelpCommand(this));
-        addCommand(new LicenseCommand(programName));
-        addCommand(new VersionCommand(programName, programVersion));
-        addCommand(new CreditsCommand());
-        addCommand(new RepositoryCommand(programRepoLink));
+        final String programName = programProperties.getProperty("program.name");
+        final String programVersion = programProperties.getProperty("program.version");
+        final String programRepoLink = programProperties.getProperty("program.repository.link");
+
+        addCommand(new HelpCommand(terminalManager, this));
+        addCommand(new LicenseCommand(programName, terminalManager));
+        addCommand(new VersionCommand(terminalManager, programName, programVersion));
+        addCommand(new CreditsCommand(terminalManager));
+        addCommand(new RepositoryCommand(terminalManager, programRepoLink));
 
         this.completer = generateCompleter(getCommands());
     }
@@ -92,9 +87,9 @@ public class CommandManager {
 
     private void addCommand(@NonNull Command command) {
         if (this.commands.stream().anyMatch(
-                        cmd -> cmd.name().equalsIgnoreCase(command.name())
-                )) {
-            throw new IllegalArgumentException("A command with the name `" + command.name() +"` already exists");
+                cmd -> cmd.name().equalsIgnoreCase(command.name())
+        )) {
+            throw new IllegalArgumentException("A command with the name `" + command.name() + "` already exists");
         }
 
         commands.add(command);
