@@ -29,7 +29,6 @@ import org.jline.builtins.Completers.TreeCompleter.Node;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.jline.builtins.Completers.TreeCompleter.node;
@@ -49,13 +48,13 @@ public class HelpCommand implements Command {
     @Override
     @Nonnull
     public String description() {
-        return "Provides information about (a) command(s).";
+        return "Provides information about available commands";
     }
 
     @Override
     @Nonnull
     public String usage() {
-        return name() + " [command]...";
+        return name() + " [command]";
     }
 
     @Override
@@ -63,9 +62,12 @@ public class HelpCommand implements Command {
     public List<Node> options() {
         List<Node> list = new ArrayList<>();
 
-        for (LinkedList<String> combination : generateEveryPossibleCommandCombination(commandManager.getCommands(), new LinkedList<>())) {
-            list.add(generateNodeFromLinkedList(combination, 0));
+        for (Command command: commandManager.getCommands()) {
+            list.add(
+                    node(command.name())
+            );
         }
+
         return list;
     }
 
@@ -93,21 +95,19 @@ public class HelpCommand implements Command {
             return;
         }
 
-        // In case the command had args, this runs and takes every arg considering it's a command,
+        // In case the command had args, this runs and takes the first arg considering it's a command,
         // then prints the command with its aliases, description and usage.
-        for (String arg : args) {
-            final Command command = commandManager.getCommand(arg);
-            if (command == null) {
-                if (!stringBuilder.isEmpty()) stringBuilder.append("\n\n");
-                stringBuilder.append("  Command `").append(arg).append("` not found");
+        final Command command = commandManager.getCommand(args.get(0));
 
-                continue;
-            }
+        if (command == null) {
+            stringBuilder.append("  Command `").append(args.get(0)).append("` not found");
 
-            if (!stringBuilder.isEmpty()) stringBuilder.append("\n\n");
-            stringBuilder.append(printableCommandInfo(command));
-            stringBuilder.append("\n").append("    Usage: `").append(command.usage()).append("`");
+            terminalManager.outputTextLn(stringBuilder.toString());
+            return;
         }
+
+        stringBuilder.append(printableCommandInfo(command));
+        stringBuilder.append("\n").append("    Usage: `").append(command.usage()).append("`");
 
         terminalManager.outputTextLn(stringBuilder.toString());
     }
@@ -124,35 +124,5 @@ public class HelpCommand implements Command {
         stringBuilder.append(" --- ").append(command.description());
 
         return stringBuilder.toString();
-    }
-
-    private LinkedList<LinkedList<String>> generateEveryPossibleCommandCombination(@NonNull List<Command> commands, LinkedList<String> currentCombination) {
-        LinkedList<LinkedList<String>> list = new LinkedList<>();
-        if (commands.size() == 1) {
-            currentCombination.add(commands.get(0).name());
-
-            list.add(currentCombination);
-            return list;
-        }
-
-        for (Command command : commands) {
-            List<Command> commandsToPass = new LinkedList<>(commands);
-            LinkedList<String> combinationToPass = new LinkedList<>(currentCombination);
-
-            commandsToPass.remove(command);
-            combinationToPass.add(command.name());
-
-            list.addAll(generateEveryPossibleCommandCombination(commandsToPass, combinationToPass));
-        }
-
-        return list;
-    }
-
-    private Node generateNodeFromLinkedList(LinkedList<String> list, int currentIndex) {
-        if (list.size() - 1 == currentIndex) {
-            return node(list.get(currentIndex));
-        }
-
-        return node(list.get(currentIndex), generateNodeFromLinkedList(list, currentIndex + 1));
     }
 }
