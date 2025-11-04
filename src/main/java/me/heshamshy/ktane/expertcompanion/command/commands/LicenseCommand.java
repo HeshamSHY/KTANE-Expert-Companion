@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -34,6 +34,8 @@ import static org.jline.builtins.Completers.TreeCompleter.node;
 public class LicenseCommand implements Command {
 
     private final String PROGRAM_NAME;
+    private final TerminalManager terminalManager;
+
 
     @Override
     @Nonnull
@@ -67,17 +69,17 @@ public class LicenseCommand implements Command {
 
     @Override
     public void handle(List<String> args) {
-        if (args.size() != 0) {
+        if (!args.isEmpty()) {
             if (args.contains("-w") || args.contains("--warranty")) {
-                TerminalManager.outputTextLn(WARRANTY_SECTION);
-                TerminalManager.outputTextLn("");
-                TerminalManager.outputTextLn(LIABILITY_SECTION);
+                terminalManager.outputTextLn(WARRANTY_SECTION);
+                terminalManager.outputTextLn("");
+                terminalManager.outputTextLn(LIABILITY_SECTION);
 
                 return;
             }
         }
 
-        TerminalManager.outputTextLn("        " + PROGRAM_NAME + " " + LICENSE_NOTICE);
+        terminalManager.outputTextLn("        " + PROGRAM_NAME + " " + LICENSE_NOTICE);
     }
 
     private final String LICENSE_NOTICE =
@@ -86,12 +88,12 @@ public class LicenseCommand implements Command {
                     it under the terms of the GNU General Public License as published by
                     the Free Software Foundation, either version 3 of the License, or
                     (at your option) any later version.
-                                        
+            
                     This program is distributed in the hope that it will be useful,
                     but WITHOUT ANY WARRANTY; without even the implied warranty of
                     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
                     GNU General Public License for more details.
-                                        
+            
                     You should have received a copy of the GNU General Public License
                     along with this program.  If not, see <https://www.gnu.org/licenses/>.
             """;
@@ -99,7 +101,7 @@ public class LicenseCommand implements Command {
     private final String WARRANTY_SECTION =
             """
                     Disclaimer of Warranty.
-                    
+            
                       THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
                     APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
                     HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
@@ -113,7 +115,7 @@ public class LicenseCommand implements Command {
     private final String LIABILITY_SECTION =
             """
                     Limitation of Liability.
-                    
+            
                       IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
                     WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
                     THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY

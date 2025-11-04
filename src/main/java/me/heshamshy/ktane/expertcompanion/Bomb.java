@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -23,7 +23,6 @@ package me.heshamshy.ktane.expertcompanion;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import me.heshamshy.ktane.expertcompanion.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ public class Bomb {
 
     private void addLabel(@NonNull String label) throws NullPointerException, IllegalAccessException {
 
-        if (label.length() != 3 || !StringUtils.isAlpha(label)) throw new IllegalAccessException("Invalid label: " + label.toUpperCase());
+        if (label.length() != 3 || !label.chars().allMatch(Character::isLetter)) throw new IllegalAccessException("Invalid label: " + label.toUpperCase());
         if (labels.contains(label.toUpperCase())) return;
 
         labels.add(label);

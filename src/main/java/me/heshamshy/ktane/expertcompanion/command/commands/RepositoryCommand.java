@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -31,7 +31,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RepositoryCommand implements Command {
 
-    private final String repoLink;
+    private final TerminalManager terminalManager;
+
+    private final String REPO_LINK;
 
     @Override
     @Nonnull
@@ -65,7 +67,7 @@ public class RepositoryCommand implements Command {
 
     @Override
     public void handle(List<String> args) {
-        TerminalManager.outputText("Git repository: ");
-        TerminalManager.outputTextLn(repoLink);
+        terminalManager.outputText("Git repository: ");
+        terminalManager.outputTextLn(REPO_LINK);
     }
 }

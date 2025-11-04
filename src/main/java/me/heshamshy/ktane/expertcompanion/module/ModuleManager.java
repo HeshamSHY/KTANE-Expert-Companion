@@ -1,6 +1,6 @@
 /*
  *     KTANE Expert Companion - An app that assists Keep Talking and Nobody Explodes experts on their mission of directing the defuser to defuse the bomb
- *     Copyright (C) 2023  HeshamSHY
+ *     Copyright (C) 2023, 2025  Hesham H.
  *
  *     This file is part of KTANE Expert Companion.
  *
@@ -32,14 +32,11 @@ public class ModuleManager {
     @Getter
     private final List<Module> modules = new ArrayList<>();
 
-    public ModuleManager() {
-    }
-
     private void addModule(@NonNull Module module) throws IllegalArgumentException {
         if (this.modules.stream().anyMatch(
                 mod -> mod.name().equalsIgnoreCase(module.name())
         )) {
-            throw new IllegalArgumentException("A module with the name `" + module.name() +"` already exists");
+            throw new IllegalArgumentException("A module with the name `" + module.name() + "` already exists");
         }
 
         modules.add(module);
