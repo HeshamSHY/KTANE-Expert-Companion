@@ -43,6 +43,7 @@ public class Main {
         }
         final String programName = properties.getProperty("program.name");
         final String programAuthor = properties.getProperty("program.author");
+        final String programYears = properties.getProperty("program.years");
         final String programDescription = properties.getProperty("program.description");
         final String programVersion = properties.getProperty("program.version");
 
@@ -52,7 +53,7 @@ public class Main {
         terminalManager.printHeader(
                 programName,
                 programAuthor,
-                2023,
+                programYears,
                 programDescription,
                 programVersion
 

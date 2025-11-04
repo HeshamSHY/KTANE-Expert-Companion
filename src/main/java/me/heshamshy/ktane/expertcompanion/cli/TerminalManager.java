@@ -73,7 +73,7 @@ public class TerminalManager {
         });
     }
 
-    public void printHeader(String programName, String authorName, int year, String programDescription, String programVersion) {
+    public void printHeader(String programName, String authorName, String year, String programDescription, String programVersion) {
 
         printSeparator();
 
@@ -91,7 +91,7 @@ public class TerminalManager {
 
     }
 
-    public void printCopyrightNotice(String programName, int year, String authorName) {
+    public void printCopyrightNotice(String programName, String year, String authorName) {
         printCentered(String.format("%s Copyright (C) %s  %s", programName, year, authorName));
         printCentered("This program comes with ABSOLUTELY NO WARRANTY; for details type `license -w'.");
         printCentered("This is free software, and you are welcome to redistribute it");
